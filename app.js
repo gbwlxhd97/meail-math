@@ -12,7 +12,7 @@ app.use(helmet()); // 보안 header파일을 모두 사용하게해줌.
 app.use(cors()); // import use만으로 cors 정책 허가 
 app.use(morgan('tiny')); // req가 들어오면 log로 찍어서 남길 수 있음 인자 tiny는 format 형식임.
 
-app.use('/signUp' ,AuthRouter) //라우터처리.
+app.use('/auth' ,AuthRouter) //라우터처리.
 app.use('/timer' ,TimerRouter) 
 
 app.use((req,res,next) => {
