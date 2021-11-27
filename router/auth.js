@@ -1,7 +1,8 @@
 import express from "express";
 import {} from'express-async-errors';
 import {body} from "express-validator";
-
+import { isAuth } from '../middleware/auth.js';
+import * as authController from "../controller/auth.js"
 const router =  express.Router();
 
 const validateCredentail = [
@@ -13,7 +14,14 @@ const validateCredentail = [
     .trim()
     .isLength({min: 2})
     .withMessage('비밀번호는 최소 5글자 이상')
-]
+];
 
-
+const validateSignup = [
+    ...validateCredentail,
+    body('name').notEmpty().withMessage('name is missing'),
+    
+];
+router.post('/signup', validateSignup,authController.signup);
+router.post('/login', validateCredentail,authController.login);
+router.get('/me', isAuth, authController.me);
 export default router;
