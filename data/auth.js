@@ -12,6 +12,14 @@ export async function findByUsername(username) {
     return users.find(user => user.username === username)
 }
 
+export async function findByName(username) {
+    return users.find(user => {
+        if(user.username === username) {
+            return user.name
+        }
+    });
+}
+
 export async function findById(id) {
     return users.find(user => user.id === id)
 }

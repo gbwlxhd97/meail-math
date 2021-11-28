@@ -24,6 +24,8 @@ export async function signup(req,res) {
 export async function login(req,res) {
     const {username,password} = req.body;
     const user = await userRepository.findByUsername(username);
+    const nickName = await userRepository.findByName(username);
+    const {name} = nickName //이름 반환
     if(!user) {
         return res.status(401).json({message: '아이디 또는 비밀번호가 유효하지않습니다.'})
     }
@@ -32,7 +34,7 @@ export async function login(req,res) {
         return res.status(401).json({message : '아이디 또는 비밀번호가 유효하지않습니다.'})
     }
     const token = createJwtToken(user.id)
-    res.status(200).json({token, username});
+    res.status(200).json({token, username,name});
 }
 
 function createJwtToken(id) {
