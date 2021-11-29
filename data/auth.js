@@ -1,9 +1,9 @@
-// 1234 : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.MTIzNA.C4wkSvr1L-R2PzQKGWGzgIjb3Zb8aft1inzGmJ6NqV8
+// 1234 : eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwYXNzd29yZCI6IjEyMzQifQ.PWaG6xN1AOjTKtDUbKiwXrtJKpHFw9_Cu3_8I_8HaYY.MTIzNA.C4wkSvr1L-R2PzQKGWGzgIjb3Zb8aft1inzGmJ6NqV8
 let users = [
     {
         id:1,
         username: 'bob',
-        password: "1234",
+        password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.MTIzNA.C4wkSvr1L-R2PzQKGWGzgIjb3Zb8aft1inzGmJ6NqV8',
         name: 'bob'
     }
 ]
