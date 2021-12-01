@@ -6,6 +6,6 @@ const router =  express.Router();
 
 
 
-router.get('/allTimes')
-router.get('')
+router.get('/allTimes') //total,subject,focusTime
+
 export default router;
