@@ -51,3 +51,9 @@ export async function me(req,res,next) {
     }
     res.status(200).json({token: req.token, username: user.username})
 }
+
+export async function findUsers(req,res) {
+    const allUsers = await userRepository.findUsers();
+    console.log(allUsers); 
+    res.status(200).json({...allUsers})
+}

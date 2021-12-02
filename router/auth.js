@@ -24,4 +24,5 @@ const validateSignup = [
 router.post('/signup', validateSignup,authController.signup);
 router.post('/login', validateCredentail,authController.login);
 router.get('/me', isAuth, authController.me);
+router.get('/users',authController.findUsers)
 export default router;

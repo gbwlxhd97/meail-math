@@ -29,3 +29,7 @@ export async function createUser(user) {
     users.push(created);
     return created.id;
 }
+
+export async function findUsers() {
+    return users;
+}
