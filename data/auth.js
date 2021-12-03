@@ -4,7 +4,9 @@ let users = [
         id:1,
         username: 'bob',
         password: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.MTIzNA.C4wkSvr1L-R2PzQKGWGzgIjb3Zb8aft1inzGmJ6NqV8',
-        name: 'bob'
+        name: 'bob',
+        phoneNumber: '010-1234-1234',
+        year: '2022'
     }
 ]
 

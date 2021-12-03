@@ -6,7 +6,7 @@ import { config } from '../config.js';
 
 
 export async function signup(req,res) {
-    const {username,password,name} = req.body;
+    const {username,password,name,phoneNumber,year} = req.body;
     const found = await userRepository.findByUsername(username);
     if(found) {
         return res.status(409).json({message: `${username}은 이미 존재하는 id입니다.`})
@@ -15,7 +15,9 @@ export async function signup(req,res) {
     const userId = await userRepository.createUser({
         username,
         password: hashed,
-        name
+        name,
+        phoneNumber,
+        year
     });
     const token = createJwtToken(userId);
     res.status(201).json({token, username})
