@@ -8,8 +8,12 @@ import { config } from '../config.js';
 export async function signup(req,res) {
     const {username,password,name,phoneNumber,year} = req.body;
     const found = await userRepository.findByUsername(username);
+    const nameFound = await userRepository.findByName(name);
     if(found) {
         return res.status(409).json({message: `${username}은 이미 존재하는 id입니다.`})
+    }
+    if(nameFound) {
+        return res.status(409).json({message: `${name}은 이미 존재하는 닉네임 입니다.`})
     }
     const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds);
     const userId = await userRepository.createUser({
@@ -58,4 +62,14 @@ export async function findUsers(req,res) {
     const allUsers = await userRepository.findUsers();
     console.log(allUsers); 
     res.status(200).json({...allUsers})
+}
+
+export async function checkId(req,res) {
+    const {username} = req.body;
+    const found = await userRepository.findByUsername(username);
+    if(found) {
+        return res.status(209).json({message: true})
+    } else {
+        return res.status(208).json({message: false})
+    }
 }
