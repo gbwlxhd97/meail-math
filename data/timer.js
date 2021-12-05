@@ -1,7 +1,7 @@
 let times = [
     {
         id:1,
-        username: 'jiwon2',
+        username: 'bob',
         totalTime: '01:01:55', //HH:MM:SS
         foucsTime: '01:01:10',
         subjectTime: '03:30:30'

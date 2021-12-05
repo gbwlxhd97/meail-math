@@ -12,7 +12,11 @@ export async function findRooms() {
 }
 
 export async function createRoom(room) {
-    const created = {...room,id: Date.now().toString()};
+    const created = {id: Date.now().toString(),...room};
     rooms.push(created);
     return created.id
+}
+
+export async function enterRoom(username) {
+
 }

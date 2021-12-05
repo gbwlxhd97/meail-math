@@ -16,5 +16,8 @@ export const config = {
     },
     bcrypt: {
         saltRounds: parseInt(require('BCRYPT_SALT_ROUNDS',12))
+    },
+    host: {
+        port: require('HOST_PORT',8080),
     }
 }
