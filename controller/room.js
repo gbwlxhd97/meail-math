@@ -21,6 +21,7 @@ export async function createRoom(req,res) {
         subject,
         info
     });
-    
     res.status(201).json({room})
 }
+
+
