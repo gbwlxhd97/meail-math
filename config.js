@@ -19,5 +19,11 @@ export const config = {
     },
     host: {
         port: require('HOST_PORT',8080),
+    },
+    db: {
+        host: require('DB_HOST'),
+        user: require("DB_USER"),
+        database: require('DB_DATABASE'),
+        password: require('DB_PASSWORD')
     }
 }
