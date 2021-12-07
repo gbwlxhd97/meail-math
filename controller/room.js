@@ -24,4 +24,14 @@ export async function createRoom(req,res) {
     res.status(201).json({room})
 }
 
+export async function enterRoom(req,res) {
+    const {title,name} = req.body;
 
+    
+
+    // 방입장할때마다 해당 방 인원 수 늘려주기.
+    const room = await roomRepository.findRooms();
+    let a = room.filter(item => item.title === title);
+    a[0].participants = a[0].participants+1;
+    // console.log(title,name);
+}

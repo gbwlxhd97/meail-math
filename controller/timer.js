@@ -8,3 +8,7 @@ export async function getUserTime(req,res) { //특정인물의 모든 공부시�
     }
     res.status(200).json({...time});
 }
+
+// export async function updateStudyTime(){
+//     const {}
+// }
