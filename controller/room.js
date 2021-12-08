@@ -2,12 +2,12 @@ import * as roomRepository from "../data/room.js";
 
 export async function findRooms(req,res) {
     const allRooms = await roomRepository.findRooms();
-    res.status(200).json({...allRooms})
+    res.status(200).json([...allRooms])
 }
 
 export async function findRoom(req,res) {
     const allRoom = await roomRepository.findRoom();
-    res.status(200).json({...allRoom})
+    res.status(200).json([...allRoom])
 }
 
 export async function createRoom(req,res) {
@@ -24,7 +24,8 @@ export async function createRoom(req,res) {
     const room = await roomRepository.createRoom({
         title,
         subject,
-        info
+        info,
+        participants: 0 //
     });
     res.status(201).json({room})
 }
@@ -41,7 +42,7 @@ export async function enterRoom(req,res) {
         title,
         name
     });
-    res.status(201).json({visit})
+    res.status(201).json({message: 0})
     // 방입장할때마다 해당 방 인원 수 늘려주기. 중복제거 아직안함.
     const room = await roomRepository.findRooms();
     let selectRoom = room.filter(item => item.title === title);
@@ -60,7 +61,7 @@ export async function exitRoom(req,res) {
         title,
         name
     })
-    res.status(203).json({leave})
+    res.status(203).json({message: 'success'})
     const room = await roomRepository.findRooms();
     let selectRoom = room.filter(item => item.title === title);
     selectRoom[0].participants = selectRoom[0].participants-1;

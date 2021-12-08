@@ -35,5 +35,6 @@ export async function exitRoom(user) {
     //임시로 이름으로함
     let index = room.findIndex(item => item.name === exit.name)
     room.splice(index,1);
-    return `${exit.name}님이 퇴장하셨습니다.`
+    return;
+    // return `${exit.name}님이 퇴장하셨습니다.`
 }
