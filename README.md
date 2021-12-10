@@ -18,5 +18,6 @@
 
 ## DB
 
-master 브랜치 메모리
+master mysql 필요
 main mysql 필요
+jiwon 메모리로 실험 ok

@@ -3,7 +3,8 @@ let rooms = [
         id: Date.now().toString(),
         title: "1번방",
         subject: "국어",
-        info: "인포메이션"
+        info: "인포메이션",
+        participants: 1
     }
 ]
 import SQ from "sequelize";
@@ -51,10 +52,16 @@ const DetailRoom = sequelize.define('detailRoom', {
     }
 },{timestamps:false})
 
+let room = [
+    {title: '1번방', name: 'bob'}
+]
+
 export async function findRooms() {
     return Room.findAll()
 }
-
+export async function findRoom() {
+    return room;
+}
 export async function createRoom(room) {
     return Room.create({...room}).then(data => data.dataValues.id)
     // const created = {id: Date.now().toString(),...room};
