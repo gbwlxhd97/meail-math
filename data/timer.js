@@ -2,9 +2,9 @@ let times = [
     {
         id:1,
         username: 'bob',
-        totalTime: '01:01:55', //HH:MM:SS
-        foucsTime: '01:01:10',
-        subjectTime: '03:30:30'
+        totalTime: 3600, //HH:MM:SS
+        foucsTime: 360,
+        subjectTime: 100
     }
 ]
 
@@ -20,6 +20,6 @@ export async function findByTime(username) {
     });
 }
 
-export async function updateTotalTime(id) {
+export async function startStudy(id) {
     
 }

@@ -7,7 +7,6 @@ import AuthRouter from "./router/auth.js";
 import TimerRouter from "./router/timer.js";
 import RoomRouter from "./router/room.js";
 import { config } from './config.js';
-import { sequelize } from './model/db.js';
 
 const app = express();
 app.use(express.json()); // post data를 json처리해줘서 읽을 수 있음
