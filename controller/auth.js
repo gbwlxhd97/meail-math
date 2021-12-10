@@ -8,7 +8,7 @@ import { config } from '../config.js';
 export async function signup(req,res) {
     const {username,password,name,phoneNumber,year} = req.body;
     const found = await userRepository.findByUsername(username);
-    const nameFound = await userRepository.findByName(name);
+    const nameFound = await userRepository.findByName_SignUp(name);
     if(found) {
         return res.status(409).json({message: `${username}은 이미 존재하는 id입니다.`})
     }

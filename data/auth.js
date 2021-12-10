@@ -39,21 +39,20 @@ const User = sequelize.define('user', {
     year: {
         type: DataTypes.INTEGER,
         allowNull: false
-    },
-})
+    },   
+}, {timestamps:false})
 
 
 export async function findByUsername(username) {
     return User.findOne({where: {username}})  
 }
 
-export async function findByName(username) {
+export async function findByName(username) { //로그인시 닉네임 반환
     return User.findOne({where: {username}}).then(data => data.dataValues.name);
-    // return users.find(user => {
-    //     if(user.username === username) {
-    //         return user.name
-    //     }
-    // });
+}
+
+export async function findByName_SignUp(name) {
+    return User.findOne({where: {name}}); //회원가입시 닉네임 중복 체크
 }
 
 export async function findById(id) {
