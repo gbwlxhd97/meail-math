@@ -25,13 +25,13 @@ export async function createRoom(req,res) {
         title,
         subject,
         info,
-        participants: 0 //
+        participants: 0 // 초기는 모두다 0
     });
     res.status(201).json({id: room})
 }
 export async function enterRoom(req,res) {
     const {title,name} = req.body;
-    console.log(title,name);
+    // console.log(title,name);
     if(!title) {
         return res.status(402).json({message: '방제목을 입력하세요'})
     }
@@ -42,10 +42,13 @@ export async function enterRoom(req,res) {
         title,
         name
     });
-    res.status(201).json({visit})
+    res.status(201).json({message:0})
     // 방입장할때마다 해당 방 인원 수 늘려주기. 중복제거 아직안함.
     const room = await roomRepository.findRooms();
+    console.log(room);
+    // console.log(room);
     let selectRoom = room.filter(item => item.title === title);
+    // console.log(selectRoom);
     selectRoom[0].participants = selectRoom[0].participants+1;
 }
 
@@ -62,43 +65,6 @@ export async function exitRoom(req,res) {
         name
     })
     res.status(203).json({leave})
-    const room = await roomRepository.findRooms();
-    let selectRoom = room.filter(item => item.title === title);
-    selectRoom[0].participants = selectRoom[0].participants-1;
-}
-
-export async function enterRoom(req,res) {
-    const {title,name} = req.body;
-    if(!title) {
-        return res.status(402).json({message: '방제목을 입력하세요'})
-    }
-    if(!name) {
-        return res.status(402).json({message: '닉네임을 입력해'})
-    }
-    const visit = await roomRepository.enterRoom({
-        title,
-        name
-    });
-    res.status(201).json({message: 0})
-    // 방입장할때마다 해당 방 인원 수 늘려주기. 중복제거 아직안함.
-    const room = await roomRepository.findRooms();
-    let selectRoom = room.filter(item => item.title === title);
-    selectRoom[0].participants = selectRoom[0].participants+1;
-}
-
-export async function exitRoom(req,res) {
-    const {title,name} = req.body;
-    if(!title) {
-        return res.status(402).json({message: '방제목을 입력하세요'})
-    }
-    if(!name) {
-        return res.status(402).json({message: '닉네임을 입력해'})
-    }
-    const leave = await roomRepository.exitRoom({
-        title,
-        name
-    })
-    res.status(203).json({message: 'success'})
     const room = await roomRepository.findRooms();
     let selectRoom = room.filter(item => item.title === title);
     selectRoom[0].participants = selectRoom[0].participants-1;

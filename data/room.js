@@ -7,6 +7,9 @@ let rooms = [
         participants: 1
     }
 ]
+let room = [
+    {title: '1번방', name: 'bob'}
+]
 import SQ from "sequelize";
 import {sequelize} from "../model/db.js";
 const DataTypes = SQ.DataTypes;
@@ -31,7 +34,8 @@ const Room = sequelize.define('room', {
         allowNull: false
     },
     participants: {
-        type: DataTypes.INTEGER
+        type: DataTypes.INTEGER,
+        allowNull: true
     }
 },{timestamps:false})
 
@@ -52,15 +56,11 @@ const DetailRoom = sequelize.define('detailRoom', {
     }
 },{timestamps:false})
 
-let room = [
-    {title: '1번방', name: 'bob'}
-]
-
 export async function findRooms() {
     return Room.findAll()
 }
 export async function findRoom() {
-    return room;
+    return DetailRoom.findAll();
 }
 export async function createRoom(room) {
     return Room.create({...room}).then(data => data.dataValues.id)
@@ -71,11 +71,11 @@ export async function createRoom(room) {
 
 export async function enterRoom(user) {
     // console.log(DetailRoom.create({...user}));
-    console.log(user);
-    return DetailRoom
-    const created = {...user};
-    room.push(created);
-    return created.title;
+    // console.log(user);
+    return DetailRoom.create({...user})
+    // const created = {...user};
+    // room.push(created);
+    // return created.title;
 }
 
 export async function exitRoom(user) {
