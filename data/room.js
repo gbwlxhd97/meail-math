@@ -1,20 +1,10 @@
-let rooms = [
-    {
-        id: Date.now().toString(),
-        title: "1번방",
-        subject: "국어",
-        info: "인포메이션",
-        participants: 1
-    }
-]
-let room = [
-    {title: '1번방', name: 'bob'}
-]
 import SQ from "sequelize";
 import {sequelize} from "../model/db.js";
 const DataTypes = SQ.DataTypes;
+const Sequelize = SQ.Sequelize;
 
-const Room = sequelize.define('room', {
+
+export const Room = sequelize.define('room', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true, //자동 증가 pk값
@@ -30,7 +20,7 @@ const Room = sequelize.define('room', {
         allowNull: false
     },
     info: {
-        type: DataTypes.STRING(65),
+        type: DataTypes.TEXT,
         allowNull: false
     },
     participants: {
@@ -39,7 +29,7 @@ const Room = sequelize.define('room', {
     }
 },{timestamps:false})
 
-const DetailRoom = sequelize.define('detailRoom', {
+export const DetailRoom = sequelize.define('detailRoom', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true, //자동 증가 pk값
@@ -55,27 +45,56 @@ const DetailRoom = sequelize.define('detailRoom', {
         allowNull: false
     }
 },{timestamps:false})
+DetailRoom.belongsTo(Room)
+const INCLUDE_ROOM = {
+    attributes: [
+        'id'
+    ],
+    include: {
+        model: DetailRoom,
+        attributes: []
+    }
+}
+export async function findRooms() { //생성된 모든 방 리스트 가져오기
+    return Room.findAll();
+}
+export async function findRoom(id) { //방 하나 리스트 가져오기
+    return Room.findOne({
+        where:id
+    }).then(data => data.dataValues)
+}
+export async function createRoom(data) {
+    return Room.create({...data}).then((data => {
+        data.dataValues.id
+    }))
+}
 
-export async function findRooms() {
-    return Room.findAll()
-}
-export async function findRoom() {
-    return DetailRoom.findAll();
-}
-export async function createRoom(room) {
-    return Room.create({...room}).then(data => data.dataValues.id)
-    // const created = {id: Date.now().toString(),...room};
-    // rooms.push(created);
-    // return created.id
+export async function getById(id) {
+    return Room.findOne({
+        where: {id}
+    })
 }
 
 export async function enterRoom(user) {
-    // console.log(DetailRoom.create({...user}));
-    // console.log(user);
-    return DetailRoom.create({...user})
-    // const created = {...user};
-    // room.push(created);
-    // return created.title;
+    // console.log(user.roomId);
+
+    let b = Room.findOne({
+        where: {
+            id:user.roomId
+        }
+    })
+    return b;
+    Room.update(
+        {participants: +10},
+        {where: {
+            id:user.roomId
+        }}
+    )
+    // return  detail
+    return DetailRoom.create({...user}).then((data => {
+        // console.log(data);
+        return data;
+    }))
 }
 
 export async function exitRoom(user) {

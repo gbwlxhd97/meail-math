@@ -1,13 +1,16 @@
 import * as roomRepository from "../data/room.js";
-
+import { Room } from '../data/room.js';
 export async function findRooms(req,res) {
     const allRooms = await roomRepository.findRooms();
     res.status(200).json([...allRooms])
 }
 
 export async function findRoom(req,res) {
-    const allRoom = await roomRepository.findRoom();
-    res.status(200).json([...allRoom])
+    const id = req.params.id
+    const Room = await roomRepository.findRoom({
+        id
+    });
+    res.status(200).json({...Room})
 }
 
 export async function createRoom(req,res) {
@@ -30,7 +33,7 @@ export async function createRoom(req,res) {
     res.status(201).json({id: room})
 }
 export async function enterRoom(req,res) {
-    const {title,name} = req.body;
+    const {title,name,roomId} = req.body;
     // console.log(title,name);
     if(!title) {
         return res.status(402).json({message: '방제목을 입력하세요'})
@@ -40,16 +43,29 @@ export async function enterRoom(req,res) {
     }
     const visit = await roomRepository.enterRoom({
         title,
-        name
+        name,
+        roomId
     });
-    res.status(201).json({message:0})
+    // let b = Room.findOne({
+    //     where: {
+    //         id:roomId
+    //     }
+    // }).then(data => data.participants)
+    // if(res.status(201)) {
+    //     Room.update(
+    //         {participants: b+1},
+    //         {where: {
+    //             id:roomId
+    //         }}
+    //     )
+    // }
+    res.status(201).json(visit)
     // 방입장할때마다 해당 방 인원 수 늘려주기. 중복제거 아직안함.
-    const room = await roomRepository.findRooms();
-    console.log(room);
-    // console.log(room);
-    let selectRoom = room.filter(item => item.title === title);
+    // console.log(Room.findOne());
+    
+    // let selectRoom = room.filter(item => item.title === title);
     // console.log(selectRoom);
-    selectRoom[0].participants = selectRoom[0].participants+1;
+    // selectRoom[0].participants = selectRoom[0].participants+1;
 }
 
 export async function exitRoom(req,res) {
