@@ -17,7 +17,9 @@ app.use(morgan('tiny')); // req가 들어오면 log로 찍어서 남길 수 있�
 app.use('/auth' ,AuthRouter) //라우터처리.
 app.use('/timer' ,TimerRouter) 
 app.use('/room' ,RoomRouter) 
-
+app.use('/', (req,res,next) => {
+    res.send('hi')
+})
 app.use((req,res,next) => {
     res.sendStatus(404) 
 });
