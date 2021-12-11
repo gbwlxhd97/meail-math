@@ -60,16 +60,10 @@ export async function enterRoom(req,res) {
     //     )
     // }
     res.status(201).json(visit)
-    // 방입장할때마다 해당 방 인원 수 늘려주기. 중복제거 아직안함.
-    // console.log(Room.findOne());
-    
-    // let selectRoom = room.filter(item => item.title === title);
-    // console.log(selectRoom);
-    // selectRoom[0].participants = selectRoom[0].participants+1;
 }
 
 export async function exitRoom(req,res) {
-    const {title,name} = req.body;
+    const {title,name,id} = req.body;
     if(!title) {
         return res.status(402).json({message: '방제목을 입력하세요'})
     }
@@ -78,10 +72,8 @@ export async function exitRoom(req,res) {
     }
     const leave = await roomRepository.exitRoom({
         title,
-        name
+        name,
+        id
     })
-    res.status(203).json({leave})
-    const room = await roomRepository.findRooms();
-    let selectRoom = room.filter(item => item.title === title);
-    selectRoom[0].participants = selectRoom[0].participants-1;
+    res.status(203).json({message: '퇴장완료'})
 }

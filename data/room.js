@@ -76,31 +76,31 @@ export async function getById(id) {
 }
 
 export async function enterRoom(user) {
-    // console.log(user.roomId);
 
-    let b = Room.findOne({
-        where: {
-            id:user.roomId
-        }
-    })
-    return b;
-    Room.update(
-        {participants: +10},
-        {where: {
-            id:user.roomId
-        }}
-    )
-    // return  detail
+    // let b = Room.findOne({
+    //     where: {
+    //         id:user.roomId
+    //     }
+    // })
+    // // return b;
+    // Room.update(
+    //     {participants: +10},
+    //     {where: {
+    //         id:user.roomId
+    //     }}
+    // )
+
     return DetailRoom.create({...user}).then((data => {
         // console.log(data);
         return data;
     }))
 }
 
-export async function exitRoom(user) {
-    const exit = {...user};
-    //임시로 이름으로함
-    let index = room.findIndex(item => item.name === exit.name)
-    room.splice(index,1);
-    return `${exit.name}님이 퇴장하셨습니다.`
+export async function exitRoom(id) {
+    // console.log(id);
+    return DetailRoom.findByPk(id.id)
+    .then((data) => {
+        data.destroy();
+        return data.id
+    })
 }
