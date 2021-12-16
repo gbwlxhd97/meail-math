@@ -65,7 +65,7 @@ export async function findRoom(id) { //방 하나 리스트 가져오기
 }
 export async function createRoom(data) {
     return Room.create({...data}).then((data => {
-        data.dataValues.id
+        return data.dataValues.id
     }))
 }
 

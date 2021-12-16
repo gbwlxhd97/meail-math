@@ -6,7 +6,7 @@ import { config } from '../config.js';
 
 
 export async function signup(req,res) {
-    const {username,password,name,phoneNumber,year} = req.body;
+    const {username,password,name,phoneNumber,emoji,year} = req.body;
     const found = await userRepository.findByUsername(username);
     const nameFound = await userRepository.findByName_SignUp(name);
     if(found) {
@@ -21,6 +21,7 @@ export async function signup(req,res) {
         password: hashed,
         name,
         phoneNumber,
+        emoji,
         year
     });
     const token = createJwtToken(userId);

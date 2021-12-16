@@ -36,6 +36,10 @@ const User = sequelize.define('user', {
         type: DataTypes.STRING(120),
         allowNull: false
     },
+    emoji: {
+        type: DataTypes.STRING(191), //varChar 191
+        allowNull: false
+    },
     year: {
         type: DataTypes.INTEGER,
         allowNull: false

@@ -9,6 +9,7 @@ import RoomRouter from "./router/room.js";
 import { config } from './config.js';
 import { sequelize } from './model/db.js';
 import * as roomController from "./controller/room.js";
+import { initSocket } from './connection/socket.js';
 
 const tasks = [
     { id: 1, title: '게시물 1번', content: '게시글 1번의 내용입니다.', createTime: new Date('2021-06-03').getTime() },
@@ -40,4 +41,5 @@ app.use((error,req,res,next) => {
 sequelize.sync().then(() => {
     // console.log(client);
 })
-app.listen(config.host.port);
+const server = app.listen(config.host.port);
+initSocket(server)

@@ -1,3 +1,4 @@
+import { getSocketIO } from '../connection/socket.js';
 import * as roomRepository from "../data/room.js";
 import { Room } from '../data/room.js';
 export async function findRooms(req,res) {
@@ -30,7 +31,9 @@ export async function createRoom(req,res) {
         info,
         participants: 0 // 초기는 모두다 0
     });
+    console.log(room);
     res.status(201).json({id: room})
+    // getSocketIO().emit('rooms',room);
 }
 export async function enterRoom(req,res) {
     const {title,name,roomId} = req.body;
