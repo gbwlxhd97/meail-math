@@ -62,6 +62,7 @@ export async function findRoom(id) { //방 하나 리스트 가져오기
     return Room.findOne({
         where:id
     }).then(data => data.dataValues)
+        .catch(err => console.log(err))
 }
 export async function createRoom(data) {
     return Room.create({...data}).then((data => {
@@ -77,6 +78,7 @@ export async function getById(id) {
 
 export async function enterRoom(room) {
 
+    console.log(room);
     let obj = {}
     obj = {
         "name":room.name,
@@ -84,7 +86,6 @@ export async function enterRoom(room) {
     }
     let arr = []
     arr.push(obj)
-    // console.log(obj);
     let particArr;
     particArr = Room.findOne({
         where: {
@@ -92,7 +93,6 @@ export async function enterRoom(room) {
         },
         attributes: ['participants']
     }).then(data =>data.dataValues.participants)
-    console.log(await particArr);
     if(await particArr===null) {
         Room.update(
             {participants: [...arr]},
@@ -108,23 +108,34 @@ export async function enterRoom(room) {
             }}
         )
     }
-    // // Room.update(
-    // //     {participants: +10},
-    // //     {where: {
-    // //         id:room.roomId
-    // //     }}
-    // // )
-    // return DetailRoom.create({...room}).then((data => {
-    //     // console.log(data);
-    //     return data;
-    // }))
+    return '아니에요'
 }
 
-export async function exitRoom(id) {
+export async function exitRoom(room) {
     // console.log(id);
-    return DetailRoom.findByPk(id.id)
-    .then((data) => {
-        data.destroy();
-        return data.id
-    })
+    let particArr;
+    let saveArr;
+    particArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['participants']
+    }).then(data =>data.dataValues.participants)
+    saveArr = await particArr
+    console.log(saveArr.length);
+    // console.log(saveArr.filter(e => e.name !== room.name));
+    Room.update(
+        {participants: saveArr.filter(e => e.name !== room.name)},
+        {where: {
+            id:room.roomId
+        }}
+    )
+    //참여자가 0명이면 자동방 닫힘
+    if(saveArr.length === 1) {
+        Room.destroy({
+            where: {
+                id:room.roomId
+            }
+        })
+    }
 }
