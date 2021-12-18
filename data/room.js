@@ -24,7 +24,7 @@ export const Room = sequelize.define('room', {
         allowNull: false
     },
     participants: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.JSON,
         allowNull: true
     }
 },{timestamps:false})
@@ -75,25 +75,49 @@ export async function getById(id) {
     })
 }
 
-export async function enterRoom(user) {
+export async function enterRoom(room) {
 
-    // let b = Room.findOne({
-    //     where: {
-    //         id:user.roomId
-    //     }
-    // })
-    // // return b;
-    // Room.update(
-    //     {participants: +10},
-    //     {where: {
-    //         id:user.roomId
-    //     }}
-    // )
-
-    return DetailRoom.create({...user}).then((data => {
-        // console.log(data);
-        return data;
-    }))
+    let obj = {}
+    obj = {
+        "name":room.name,
+        "emoji":room.emoji
+    }
+    let arr = []
+    arr.push(obj)
+    // console.log(obj);
+    let particArr;
+    particArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['participants']
+    }).then(data =>data.dataValues.participants)
+    console.log(await particArr);
+    if(await particArr===null) {
+        Room.update(
+            {participants: [...arr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+    } else {
+        Room.update(
+            {participants: [...await particArr,...arr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+    }
+    // // Room.update(
+    // //     {participants: +10},
+    // //     {where: {
+    // //         id:room.roomId
+    // //     }}
+    // // )
+    // return DetailRoom.create({...room}).then((data => {
+    //     // console.log(data);
+    //     return data;
+    // }))
 }
 
 export async function exitRoom(id) {

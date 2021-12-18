@@ -3,6 +3,8 @@ import * as roomRepository from "../data/room.js";
 import { Room } from '../data/room.js';
 export async function findRooms(req,res) {
     const allRooms = await roomRepository.findRooms();
+    console.log(allRooms);
+    // console.log(allRooms.map(e => e.dataValues.participants));
     res.status(200).json([...allRooms])
 }
 
@@ -29,39 +31,26 @@ export async function createRoom(req,res) {
         title,
         subject,
         info,
-        participants: 0 // 초기는 모두다 0
+        // participants: {"thr": "ttt"} // 초기는 모두다 0
     });
     console.log(room);
     res.status(201).json({id: room})
     // getSocketIO().emit('rooms',room);
 }
 export async function enterRoom(req,res) {
-    const {title,name,roomId} = req.body;
+    const {roomId,name,emoji} = req.body;
     // console.log(title,name);
-    if(!title) {
-        return res.status(402).json({message: '방제목을 입력하세요'})
+    if(!roomId) {
+        return res.status(402).json({message: '방번호를 입력하세요'})
     }
     if(!name) {
         return res.status(402).json({message: '닉네임을 입력해'})
     }
     const visit = await roomRepository.enterRoom({
-        title,
+        roomId,
         name,
-        roomId
+        emoji
     });
-    // let b = Room.findOne({
-    //     where: {
-    //         id:roomId
-    //     }
-    // }).then(data => data.participants)
-    // if(res.status(201)) {
-    //     Room.update(
-    //         {participants: b+1},
-    //         {where: {
-    //             id:roomId
-    //         }}
-    //     )
-    // }
     res.status(201).json(visit)
 }
 
