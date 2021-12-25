@@ -29,32 +29,32 @@ export const Room = sequelize.define('room', {
     }
 },{timestamps:false})
 
-export const DetailRoom = sequelize.define('detailRoom', {
-    id: {
-        type: DataTypes.INTEGER,
-        autoIncrement: true, //자동 증가 pk값
-        allowNull: false, //null 허용 x
-        primaryKey: true
-    },
-    title: {
-        type: DataTypes.STRING(65),
-        allowNull: false
-    },
-    name: {
-        type: DataTypes.STRING(65),
-        allowNull: false
-    }
-},{timestamps:false})
-DetailRoom.belongsTo(Room)
-const INCLUDE_ROOM = {
-    attributes: [
-        'id'
-    ],
-    include: {
-        model: DetailRoom,
-        attributes: []
-    }
-}
+// export const DetailRoom = sequelize.define('detailRoom', {
+//     id: {
+//         type: DataTypes.INTEGER,
+//         autoIncrement: true, //자동 증가 pk값
+//         allowNull: false, //null 허용 x
+//         primaryKey: true
+//     },
+//     title: {
+//         type: DataTypes.STRING(65),
+//         allowNull: false
+//     },
+//     name: {
+//         type: DataTypes.STRING(65),
+//         allowNull: false
+//     }
+// },{timestamps:false})
+// DetailRoom.belongsTo(Room)
+// const INCLUDE_ROOM = {
+//     attributes: [
+//         'id'
+//     ],
+//     include: {
+//         model: DetailRoom,
+//         attributes: []
+//     }
+// }
 export async function findRooms() { //생성된 모든 방 리스트 가져오기
     return Room.findAll();
 }
