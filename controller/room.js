@@ -48,6 +48,17 @@ export async function enterRoom(req,res) {
     const {roomId,name,emoji} = req.body;
     const foundData = await roomRepository.findRoom(roomId)
     let found;
+    let roomIdDatas = []
+    let roomIds = []
+    let check
+    roomIdDatas =Room.findAll({ //현재 존재하는 방의 번호들을 담은 원본배열
+        attributes: ['id']
+    }).then(data => data.map(e => e.dataValues.id))
+    roomIds = [...await roomIdDatas]
+    check = roomIds.includes(roomId);
+    if(!check) {
+        return res.status(404).json({message: '해당하는 방 번호는 없어'})
+    }
     if(foundData.participants !==null) { //초기 널 체크
         found =foundData.participants.filter(user => user.name ===name).length //이름이 공통인애들만 찾는 배열 1이상이면 공통인놈이 이미 있는거임
     }
@@ -60,17 +71,14 @@ export async function enterRoom(req,res) {
     if(!name) {
         return res.status(402).json({message: '닉네임을 입력해'})
     }
-    
+
     const visit = await roomRepository.enterRoom({
         roomId,
         name,
         emoji
     });
     console.log(visit);
-    res.status(201).json({message: `${name}님 ${roomId}번방 입장`})
-    // if(!visit) {
-    //     res.status(404).json({message: `${roomId}번은 생성된 방이 아닙니다.`})
-    // }
+    res.status(201).json({message: `${name}님 ${roomId}번방입장`})
 }
 
 export async function exitRoom(req,res) {
@@ -86,7 +94,7 @@ export async function exitRoom(req,res) {
         name
     })
     try {
-        res.status(203).json({message: `${name}님 ${roomId}방퇴장`})
+        res.status(203).json({message: `${name}님 ${roomId}번방퇴장`})
     } catch (error) {
         res.status(404).json({message: `${roomId}번은 생성된 방이 아닙니다.`})
     }

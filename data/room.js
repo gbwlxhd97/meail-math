@@ -108,7 +108,6 @@ export async function enterRoom(room) {
             }}
         )
     }
-    return '아니에요'
 }
 
 export async function exitRoom(room) {

@@ -62,7 +62,7 @@ export async function me(req,res,next) {
 export async function findUsers(req,res) {
     const allUsers = await userRepository.findUsers();
     console.log(allUsers); 
-    res.status(200).json({...allUsers})
+    res.status(200).json([...allUsers])
 }
 
 export async function checkId(req,res) {
