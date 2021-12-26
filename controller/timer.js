@@ -14,8 +14,22 @@ export async function getAllRank(req,res) {
     res.status(201).json([...result])
 }
 
-export async function updateStudyTime(req,res, next){
+export async function createStudyTime(req,res, next){
     const {time} = req.body;
-    const userTime = await timerRepository.updateTime(time, req.userId)
+    const userTime = await timerRepository.createStudyTime(time, req.userId)
     res.status(201).json(userTime)
+}
+
+export async function updateStudyTime(req,res) {
+    const id = req.params.id;
+    const time = req.body.time; //req 보낼값
+    const data = await timerRepository.getById(id);
+    if(!data) {
+        return res.status(404).json({message: `time not found ${id}`})
+    }
+    if(data.userId !== req.userId) {
+        return res.sendStatus(403);
+    }
+    const updated = await timerRepository.updateStudyTime(id,time)
+    res.status(200).json(updated)
 }

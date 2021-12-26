@@ -75,12 +75,12 @@ export async function getById(id) {
     })
 }
 
-export async function updateTime(time,userId) {
+export async function createStudyTime(time,userId) {
     return Timer.create({time,userId})
     .then(data => getById(data.dataValues.id))
 }
 
-export async function update(id,time) {
+export async function updateStudyTime(id,time) {
     return Timer.findByPk(id,INCLUDE_USER)
     .then((data) => {
         data.time = time;

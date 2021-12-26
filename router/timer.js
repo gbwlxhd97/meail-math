@@ -8,5 +8,6 @@ const router =  express.Router();
 
 router.get('/rank',timerController.getAllRank)
 router.get('/allTime',timerController.getUserTime) //total,subject,focusTime
-router.put('/updateTime',isAuth,timerController.updateStudyTime)
+router.post('/createTime',isAuth,timerController.createStudyTime)
+router.put('/update/:id',isAuth,timerController.updateStudyTime);
 export default router;
