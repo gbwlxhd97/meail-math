@@ -15,7 +15,6 @@ export async function findRoom(req,res) {
     const room = await roomRepository.findRoom({
         id
     });
-    
     if(room !== undefined) {
         res.status(200).json({...room})
     } else {
@@ -71,11 +70,10 @@ export async function enterRoom(req,res) {
     if(!name) {
         return res.status(402).json({message: '닉네임을 입력해'})
     }
-
     const visit = await roomRepository.enterRoom({
         roomId,
         name,
-        emoji
+        emoji,
     });
     console.log(visit);
     res.status(201).json({message: `${name}님 ${roomId}번방입장`})
@@ -98,5 +96,15 @@ export async function exitRoom(req,res) {
     } catch (error) {
         res.status(404).json({message: `${roomId}번은 생성된 방이 아닙니다.`})
     }
+}
 
+export async function detailRoomTimeUpdate(req,res) {
+    const {roomId,name,time} = req.body;
+    const up = await roomRepository.detailRoomTimeUpdate({
+        roomId,
+        name,
+        time
+    })
+    
+    res.status(201).json(`${roomId}번 방 ${name}님 시간 업데이트`)
 }

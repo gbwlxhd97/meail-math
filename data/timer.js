@@ -94,3 +94,8 @@ export async function remove(id) {
         data.destroy();
     })
 }
+
+
+export async function testUpdateTime() {
+    
+}

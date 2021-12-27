@@ -56,7 +56,11 @@ export const Room = sequelize.define('room', {
 //     }
 // }
 export async function findRooms() { //생성된 모든 방 리스트 가져오기
-    return Room.findAll();
+    return Room.findAll({
+        attributes: [
+            'id','title','subject','participants'
+        ]
+    });
 }
 export async function findRoom(id) { //방 하나 리스트 가져오기
     return Room.findOne({
@@ -77,12 +81,12 @@ export async function getById(id) {
 }
 
 export async function enterRoom(room) {
-
     console.log(room);
     let obj = {}
     obj = {
         "name":room.name,
-        "emoji":room.emoji
+        "emoji":room.emoji,
+        "time": 0
     }
     let arr = []
     arr.push(obj)
@@ -109,7 +113,38 @@ export async function enterRoom(room) {
         )
     }
 }
+export async function detailRoomTimeUpdate(room) {
+    let particArr;
+    let restArr; 
+    let updateArr;
+    particArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['participants']
+    }).then(data =>data.dataValues.participants)
+    updateArr = [...await particArr]
+    restArr = [...await particArr]
+    restArr = restArr.filter(item => item.name !== room.name) //나머지 학생들
+    updateArr = updateArr.filter(item => item.name === room.name) //바꿀 학생
+    let saveEmoji = updateArr[0].emoji
+    let obj = {}
+    obj = {
+        "name":room.name,
+        "time": room.time,
+        "emoji": saveEmoji
+    }
+    updateArr = []
+    updateArr.push(obj)
 
+    return Room.update(
+        {participants: [...restArr,...updateArr]},
+        {where: {
+            id:room.roomId
+        }}
+    )
+    console.log(updateArr);
+}
 export async function exitRoom(room) {
     // console.log(id);
     let particArr;
