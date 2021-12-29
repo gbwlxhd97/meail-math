@@ -55,6 +55,10 @@ export async function findByName(username) { //로그인시 닉네임 반환
     return User.findOne({where: {username}}).then(data => data.dataValues.name);
 }
 
+export async function findByEmoji(username) { //로그인시 이모티콘 반환
+    return User.findOne({where: {username}}).then(data => data.dataValues.emoji);
+}
+
 export async function findByName_SignUp(name) {
     return User.findOne({where: {name}}); //회원가입시 닉네임 중복 체크
 }
@@ -69,6 +73,6 @@ export async function createUser(user) {
 
 export async function findUsers() {
     return User.findAll({
-        attributes: ['id','username','name']
+        attributes: ['id','username','name','emoji']
     })
 }

@@ -26,7 +26,7 @@ export const Room = sequelize.define('room', {
     participants: {
         type: DataTypes.JSON,
         allowNull: true
-    }
+    },
 },{timestamps:false})
 
 // export const DetailRoom = sequelize.define('detailRoom', {
