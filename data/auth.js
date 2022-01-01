@@ -47,7 +47,7 @@ export const User = sequelize.define('user', {
 }, {timestamps:false})
 
 
-export async function findByUsername(username) {
+export async function findByUsername(username) { //id중복체크
     return User.findOne({where: {username}})  
 }
 

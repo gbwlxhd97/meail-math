@@ -1,12 +1,3 @@
-let times = [
-    {
-        id:1,
-        username: 'bob',
-        totalTime: 3600, //HH:MM:SS
-        foucsTime: 360,
-        subjectTime: 100
-    }
-]
 import SQ from "sequelize";
 import { sequelize } from '../model/db.js';
 import { User } from './auth.js';
@@ -70,18 +61,20 @@ export async function getByName(id) {
 
 export async function getById(id) {
     return Timer.findOne({
-        where:{id},
+        where:{
+            userId:id
+        },
         ...INCLUDE_USER
     })
 }
 
-export async function createStudyTime(time,userId) {
-    return Timer.create({time,userId})
-    .then(data => getById(data.dataValues.id))
+export async function createStudyTime(userId) {
+    return Timer.create({userId})
+    // .then(data => getById(data.dataValues.id))
 }
 
-export async function updateStudyTime(id,time) {
-    return Timer.findByPk(id,INCLUDE_USER)
+export async function updateStudyTime(pk,time) {
+    return Timer.findByPk(pk,INCLUDE_USER)
     .then((data) => {
         data.time = time;
         return data.save(); //저장하면 바뀐 자기자신 리턴

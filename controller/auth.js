@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import {} from "express-async-errors";
 import * as userRepository from "../data/auth.js";
 import { config } from '../config.js';
-
+import { Timer } from '../data/timer.js';
 
 export async function signup(req,res) {
     const {username,password,name,phoneNumber,emoji,year} = req.body;
@@ -54,10 +54,16 @@ function createJwtToken(id) {
 
 export async function me(req,res,next) {
     const user = await userRepository.findById(req.userId);
+    let myTime;
+    myTime = Timer.findOne({
+        where: {
+            userId:user.id
+        }
+    }).then(data=> data.dataValues.time);
     if(!user) {
         return res.status(404).json({message: 'User not found'})
     }
-    res.status(200).json({token: req.token, username: user.username})
+    res.status(200).json({name: user.name, time: await myTime})
 }
 
 export async function findUsers(req,res) {

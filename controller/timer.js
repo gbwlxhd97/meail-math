@@ -1,5 +1,5 @@
 import * as timerRepository from "../data/timer.js"
-
+import { Timer } from '../data/timer.js';
 export async function getUserTime(req,res) { //특정인물의 모든 공부시간
     const {name} = req.body;
     const time = await timerRepository.getByName(name);
@@ -16,20 +16,26 @@ export async function getAllRank(req,res) {
 
 export async function createStudyTime(req,res, next){
     const {time} = req.body;
-    const userTime = await timerRepository.createStudyTime(time, req.userId)
-    res.status(201).json(userTime)
+    const userTime = await timerRepository.createStudyTime(req.userId)
+    res.status(201).json({message: 'success'})
 }
 
 export async function updateStudyTime(req,res) {
-    const id = req.params.id;
+    const id = req.userId;
     const time = req.body.time; //req 보낼값
     const data = await timerRepository.getById(id);
+    let pk; //timer 테이블의 pk값
+    pk=Timer.findOne({
+        where: {
+            userId:id
+        }
+    }).then(data => data.dataValues.id)
     if(!data) {
         return res.status(404).json({message: `time not found ${id}`})
     }
     if(data.userId !== req.userId) {
         return res.sendStatus(403);
     }
-    const updated = await timerRepository.updateStudyTime(id,time)
+    const updated = await timerRepository.updateStudyTime(await pk,time)
     res.status(200).json(updated)
 }
