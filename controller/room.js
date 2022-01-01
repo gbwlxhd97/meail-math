@@ -23,20 +23,20 @@ export async function findRoom(req,res) {
 }
 
 export async function createRoom(req,res) {
-    const {title,subject,info} = req.body;
+    const {title,subject} = req.body;
     if(!title) {
         return res.status(402).json({message: '방제목을 입력하세요'})
     }
     if(!subject) {
         return res.status(402).json({message: '과목이름을 입력하세요'})
     }
-    if(!info) {
-        return res.status(402).json({message: '인포를입력해'})
-    }
+    // if(!info) {
+    //     return res.status(402).json({message: '인포를입력해'})
+    // }
     const room = await roomRepository.createRoom({ //res 값은 방 id가 날라옴
         title,
         subject,
-        info,
+        // info,
         // participants: {"thr": "ttt"} // 초기는 모두다 0
     });
     console.log(room);
@@ -75,21 +75,40 @@ export async function enterRoom(req,res) {
         name,
         emoji,
     });
-    console.log(visit);
+    // console.log(visit);
     res.status(201).json({message: `${name}님 ${roomId}번방입장`})
 }
 
 export async function exitRoom(req,res) {
     const {roomId,name} = req.body;
+    let getData;
+    let saveData;
+    let checkName
+    getData = Room.findOne({
+        where: {
+            id: roomId
+        },
+        attributes: ['names']
+    }).then(data =>data.dataValues.names)
+    saveData = await getData;
+    console.log(saveData);
+    checkName = saveData.includes(name)
+    if(!checkName) {
+        return res.status(404).json({message: `${name}님은 ${roomId}번방에 없습니다!`})
+    }
     if(!roomId) {
         return res.status(402).json({message: '방번호를 입력하세요.'})
     }
     if(!name) {
         return res.status(402).json({message: '닉네임을 입력해'})
     }
+    // if(!emoji) {
+    //     return res.status(402).json({message: '이모지를 입력해'})
+    // }
     const leave = await roomRepository.exitRoom({
         roomId,
-        name
+        name,
+        // emoji
     })
     try {
         res.status(203).json({message: `${name}님 ${roomId}번방퇴장`})

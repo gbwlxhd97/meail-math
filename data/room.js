@@ -19,11 +19,19 @@ export const Room = sequelize.define('room', {
         type: DataTypes.STRING(45),
         allowNull: false
     },
-    info: {
-        type: DataTypes.TEXT,
-        allowNull: false
-    },
+    // info: {
+    //     type: DataTypes.TEXT,
+    //     allowNull: false
+    // },
     participants: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    names: {
+        type: DataTypes.JSON,
+        allowNull: true
+    },
+    emojis: {
         type: DataTypes.JSON,
         allowNull: true
     },
@@ -58,12 +66,13 @@ export const Room = sequelize.define('room', {
 export async function findRooms() { //생성된 모든 방 리스트 가져오기
     return Room.findAll({
         attributes: [
-            'id','title','subject','participants'
+            'id','title','subject','names','emojis'
         ]
     });
 }
 export async function findRoom(id) { //방 하나 리스트 가져오기
     return Room.findOne({
+        attributes: ['id','title','subject','participants'],
         where:id
     }).then(data => data.dataValues)
         .catch(err => console.log(err))
@@ -82,24 +91,58 @@ export async function getById(id) {
 
 export async function enterRoom(room) {
     console.log(room);
+    
     let obj = {}
     obj = {
         "name":room.name,
         "emoji":room.emoji,
         "time": 0
     }
-    let arr = []
+    let arr = [] // partic을 담당해줌.
+    let saveEmojisArr = [] //emojis를 담당
+    let saveNamesArr = [] //names를 담당
     arr.push(obj)
-    let particArr;
+    saveEmojisArr.push(room.emoji)
+    saveNamesArr.push(room.name)
+    console.log(saveNamesArr);
+    let particArr; //db에서 가져온 partic
+    let emojisArr; //db에서 가져온 emojis
+    let namesArr; //db에서 가져온 names
     particArr = Room.findOne({
         where: {
             id:room.roomId
         },
         attributes: ['participants']
-    }).then(data =>data.dataValues.participants)
+    }).then(data =>data.dataValues.participants);
+    emojisArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['emojis']
+    }).then(data =>data.dataValues.emojis);
+    namesArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['names']
+    }).then(data =>data.dataValues.names);
     if(await particArr===null) {
         Room.update(
             {participants: [...arr]},
+            // {names: [...saveNamesArr]},
+            // {emojis: [...saveEmojisArr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+        Room.update(
+            {names: [...saveNamesArr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+        Room.update(
+            {emojis: [...saveEmojisArr]},
             {where: {
                 id:room.roomId
             }}
@@ -107,6 +150,20 @@ export async function enterRoom(room) {
     } else {
         Room.update(
             {participants: [...await particArr,...arr]},
+            // {names: [...await namesArr,...saveNamesArr]},
+            // {emojis: [...await emojisArr,...saveEmojisArr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+        Room.update(
+            {names: [...await namesArr,...saveNamesArr]},
+            {where: {
+                id:room.roomId
+            }}
+        )
+        Room.update(
+            {emojis: [...await emojisArr,...saveEmojisArr]},
             {where: {
                 id:room.roomId
             }}
@@ -147,25 +204,60 @@ export async function detailRoomTimeUpdate(room) {
 }
 export async function exitRoom(room) {
     // console.log(id);
-    let particArr;
-    let saveArr;
+    let saveParticArr;
+    let saveEmojisArr;
+    let saveNamesArr;
+    let particArr; //db에서 가져온 partic
+    let emojisArr; //db에서 가져온 emojis
+    let namesArr; //db에서 가져온 names
+    let idx; //name에서 인덱스번호를 찾아줌
     particArr = Room.findOne({
         where: {
             id:room.roomId
         },
         attributes: ['participants']
     }).then(data =>data.dataValues.participants)
-    saveArr = await particArr
-    console.log(saveArr.length);
-    // console.log(saveArr.filter(e => e.name !== room.name));
+    emojisArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['emojis']
+    }).then(data =>data.dataValues.emojis)
+    namesArr = Room.findOne({
+        where: {
+            id:room.roomId
+        },
+        attributes: ['names']
+    }).then(data =>data.dataValues.names)
+    saveParticArr = await particArr
+    saveEmojisArr = await emojisArr
+    saveNamesArr = await namesArr
+    idx = saveNamesArr.findIndex(item => item === room.name)
+    if(idx !== -1) { //방에 해당하는놈이없으면 안해주기
+        saveEmojisArr.splice(idx,1)
+    }
+    console.log(saveEmojisArr);
+    console.log(idx);
     Room.update(
-        {participants: saveArr.filter(e => e.name !== room.name)},
+        {participants: saveParticArr.filter(e => e.name !== room.name)},
+        {where: {
+            id:room.roomId
+        }}
+    )
+    Room.update(
+        {emojis: saveEmojisArr},
+        {where: {
+            id:room.roomId
+        }}
+    )
+    Room.update(
+        {names: saveNamesArr.filter(e => e !== room.name)}, //닉네임은 유니크라 상관없음.
         {where: {
             id:room.roomId
         }}
     )
     //참여자가 0명이면 자동방 닫힘
-    if(saveArr.length === 1) {
+    if(saveParticArr.length === 1) {
         Room.destroy({
             where: {
                 id:room.roomId
