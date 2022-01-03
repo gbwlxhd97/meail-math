@@ -6,7 +6,7 @@ const router =  express.Router();
 
 
 
-router.get('/rank',timerController.getAllRank)
+router.get('/ranking',timerController.getAllRank)
 router.get('/allTime',timerController.getUserTime) //total,subject,focusTime
 router.post('/createTime',isAuth,timerController.createStudyTime)
 router.put('/updateTime',isAuth,timerController.updateStudyTime);
