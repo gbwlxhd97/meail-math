@@ -14,7 +14,8 @@ export const Timer = sequelize.define('timer', {
     },
     time: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        defaultValue: 0
     }
 });
 Timer.belongsTo(User);
@@ -24,6 +25,7 @@ const INCLUDE_USER = {
         'id','time','userId',
         [Sequelize.col('user.name'),'name'],
         [Sequelize.col('user.username'),'username'], //나중에 없애기
+        [Sequelize.col('user.year'),'year'], 
         [Sequelize.col('user.emoji'),'emoji'],
     ],
     include: {
@@ -73,10 +75,18 @@ export async function createStudyTime(userId) {
     // .then(data => getById(data.dataValues.id))
 }
 
-export async function updateStudyTime(pk,time) {
-    return Timer.findByPk(pk,INCLUDE_USER)
+export async function updateStudyTime(timeId,time) {
+    let termData;
+    let saveTime; // 이미 저장되어 있는 아이들의 시간
+    termData=Timer.findOne({
+        where: {
+            id:timeId
+        }
+    }).then(data => data.dataValues.time)
+    saveTime = await termData;
+    return Timer.findByPk(timeId,INCLUDE_USER)
     .then((data) => {
-        data.time = time;
+        data.time = saveTime+time;
         return data.save(); //저장하면 바뀐 자기자신 리턴
     })
 }
@@ -86,9 +96,4 @@ export async function remove(id) {
     .then((data) => {
         data.destroy();
     })
-}
-
-
-export async function testUpdateTime() {
-    
 }
